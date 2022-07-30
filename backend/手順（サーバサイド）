@@ -1,0 +1,61 @@
+expressを関数に入れる
+express.Routerでルーターを作る
+routerファイルを作り、exportする
+server.jsにインポートする
+
+ミドルウェアを作る
+  app.use("/api/users",useRoute)
+
+データベースを作る
+
+スキーマをかく（型みたいなやつ）　モデルと呼ぶ
+
+mongodbとappをmongooseで接続する
+  mongoose.conect("mongoDBからとってきたパス")
+
+  .envファイルを作って　mongoDBからとってきたパスを書く　見られないため
+  dotenvをインストールして、.envファイル中の関数をserver.js内で読めるようにする
+  　require("dotenv").config() これを書けば変数を宣言する必要なく読める
+
+
+・ポストマンを使う
+  UIの無い状態でreqを投げられる
+    インストールする必要あり,ローカルサーバにreqを投げるには
+
+    expressに、今から使うデータはJson形式である、って伝えなきゃならん
+    ミドルウエア
+    app.use(express.json())
+
+ログイン機能について
+  mongooseのfindOneを使う
+  const user = await User.findOne({email:req.body.email})
+  オブジェクトを引数に
+
+
+・ ユーザー更新の書き方・・・idの指定、パラメータの使い方 findByIdAndUpdate(idで見つける,{パラメータを入れる})
+  router.put("/:id",async (req,res)=>{
+ 
+    if (req.body.id === req.params.id || req.body.isAdmin){
+      try{
+        const user = await User.findByIdAndUpdate(req.params.id,{
+          //$setは全てのパラメータを指定するという意味
+          $set : req.body,
+        })
+        res.status(200).json("ユーザー情報が更新されました")
+    }
+
+・削除も更新と同じエントリーポイントでok　メソッドがputからdeleteになってるから消せる
+
+パラメータのユーザ情報を取得する時、パスワードとアップデート日を隠したい
+const {password,updateAt,...other} = user._doc
+
+
+post.jsを作る(モデル)投稿する内容、画像、いいねデータ
+
+削除する方法
+postは変数です
+await post.deleteOne()
+
+userIdでpostを全てとってくる時
+ Post.find({userId: currentUser._id})
+ となることに注意
